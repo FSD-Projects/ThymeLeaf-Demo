@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Employee Form</title>
+<!-- Bootstrap CDN -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/demo.css}">
+</head>
+<body>
+<h3 class="text-center">Save Employee</h3>
+<hr>
+<div class="card mx-auto" style="width:20rem; height: 20rem">
+	<div class="card-body text-center">
+		<form action="#" th:action="@{/api/employees/saveForm}" th:object="${employee}" method="POST">
+			<input type="hidden" th:field="*{id}"/>
+			<input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name"/>
+			<p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"/>
+			<input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name"/>
+			<p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error"/>
+			<input type="email" th:field="*{email}" class="form-control" placeholder="Corporate Email"/>
+			<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"/>
+			<button class=" btn btn-info text-center col-4" type="submit">Save</button>
+		</form>
+		<br/>
+		<a th:href="@{/api/employees/list}">Back to Employees List</a>
+	</div>
+</div>
+</body>
+</html>
