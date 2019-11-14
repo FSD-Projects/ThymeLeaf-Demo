@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <!-- Bootstrap CDN -->
@@ -12,15 +13,21 @@
 </head>
 <body>
 	<h3 class="ml-2 text-center">Employee Directory</h3>
+	<div class="pl-3">
+		User: <span sec:authentication="name"></span> <br> Role(s): <span
+			sec:authentication="principal.authorities"></span> <br>
+		<br>
+	</div>
 	<hr>
 	<div class="inline mb-3">
 		<a th:href="@{/api/employees/showFormForAdd}"><button
-			class="btn btn-primary btn-sm mr-5 ml-5">Add Employee</button></a>
-			<form action="#" th:action="@{/api/employees/search}" method=POST class="float-right mr-5">
-				<input type="search" name="firstName" placeholder="First Name"/>
-				<input type="search" name="lastName" placeholder="Last Name"/>
-				<button class="btn btn-sm btn-primary" type="submit">Search</button>
-			</form>
+				class="btn btn-primary btn-sm mr-5 ml-5">Add Employee</button></a>
+		<form action="#" th:action="@{/api/employees/search}" method=POST
+			class="float-right mr-5">
+			<input type="search" name="firstName" placeholder="First Name" /> <input
+				type="search" name="lastName" placeholder="Last Name" />
+			<button class="btn btn-sm btn-primary" type="submit">Search</button>
+		</form>
 	</div>
 	<table class="table table-striped align-table mx-auto">
 		<thead class="thead-dark">
@@ -36,18 +43,37 @@
 				<td th:text="${tempEmployee.firstName}" />
 				<td th:text="${tempEmployee.lastName}" />
 				<td th:text="${tempEmployee.email}" />
-				<td><a
-					th:href="@{/api/employees/showFormForUpdate (employeeId=${tempEmployee.id})}"><button
-							class="btn btn-info">Update</button></a></td>
+
 				<td>
-					<form action="#" th:action="@{/api/employees/deleteEmployee}" method=POST>
-						<input type="hidden" name="employeeId" th:value="${tempEmployee.id}" />
-						
-						<button onclick="if (!(confirm('Are you sure you want to delete this employee?'))) return false" class="btn btn-danger">Delete</button>
-					</form>
+					<div sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')">
+						<a
+							th:href="@{/api/employees/showFormForUpdate (employeeId=${tempEmployee.id})}"><button
+								class="btn btn-info">Update</button></a>
+					</div>
+				</td>
+
+				<td>
+					<div sec:authorize="hasRole('ROLE_ADMIN')">
+						<form action="#" th:action="@{/api/employees/deleteEmployee}"
+							method=POST>
+							<input type="hidden" name="employeeId"
+								th:value="${tempEmployee.id}" />
+
+							<button
+								onclick="if (!(confirm('Are you sure you want to delete this employee?'))) return false"
+								class="btn btn-danger">Delete</button>
+						</form>
+					</div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<!-- Add a logout button -->
+	<form action="#" th:action="@{/logout}" method="POST">
+
+		<input type="submit" value="Logout"
+			class="btn btn-outline-primary mt-2 ml-2 mb-2" />
+
+	</form>
 </body>
 </html>
